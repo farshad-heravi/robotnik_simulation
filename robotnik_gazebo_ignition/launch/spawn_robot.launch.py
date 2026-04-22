@@ -126,11 +126,14 @@ def launch_setup(context, params):
         ]),
         launch_arguments={
             'verbose': 'false',
-            'robot_xacro_file': params['robot_xacro'],
+            'robot_xacro_path': params['robot_xacro'],
             'frame_prefix': [params['robot_id'], '_'],
             'namespace': params['robot_id'],
             'gazebo_ignition': 'true',
-            'low_performance_simulation': params['low_performance_simulation']
+            'robot': params['robot'],
+            'robot_model': params['robot_model'],
+            'low_performance_simulation': params['low_performance_simulation'],
+            'end_effector': params['end_effector'],
         }.items(),
     ))
 
@@ -273,7 +276,7 @@ def launch_setup(context, params):
     # Check if rviz config path is modified, if not use default fixed frame
     rviz_config_default = str(
         Path(
-            FindPackageShare('robotnik_gazebo_ignition').perform(context)
+            FindPackageShare('renee_rbvogui_navigation').perform(context)
         )
         / 'config'
         / 'rviz_config.rviz'
@@ -322,6 +325,7 @@ def generate_launch_description():
         ("rviz_config", "RViz configuration file", "", "CONFIG_RVIZ"),
         ("use_sim_time", "Use simulation time", "True", "USE_SIM_TIME"),
         ("low_performance_simulation", "Enable Low Performance Simulation", "False", "LOW_PERFORMANCE_SIMULATION"),
+        ("end_effector", "End effector to use", "rg6", "END_EFFECTOR"),
     ]
 
     ld = LaunchDescription()
