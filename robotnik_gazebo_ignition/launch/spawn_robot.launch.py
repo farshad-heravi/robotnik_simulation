@@ -134,6 +134,7 @@ def launch_setup(context, params):
             'robot_model': params['robot_model'],
             'low_performance_simulation': params['low_performance_simulation'],
             'end_effector': params['end_effector'],
+            'use_tool_changer': 'true',
         }.items(),
     ))
 
