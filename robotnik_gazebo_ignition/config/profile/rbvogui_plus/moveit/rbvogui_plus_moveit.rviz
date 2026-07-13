@@ -145,15 +145,47 @@ Visualization Manager:
       Value: true
       Velocity_Scaling_Factor: 0.1
     - Class: rviz_default_plugins/Image
-      Enabled: true
-      Name: ArmCamera
+      Enabled: false
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: ArmCameraLeftImage
+      Normalize Range: true
       Topic:
         Depth: 5
         Durability Policy: Volatile
         History Policy: Keep Last
-        Reliability Policy: Best Effort
-        Value: arm_rgbd_camera/color/image_raw
-      Value: true
+        Reliability Policy: Reliable
+        Value: arm_rgbd_camera/left/image_raw
+      Value: false
+    - Class: rviz_default_plugins/Image
+      Enabled: false
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: ArmCameraRightImage
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: arm_rgbd_camera/right/image_raw
+      Value: false
+    - Class: rviz_default_plugins/Image
+      Enabled: false
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: ArmCameraDepthImage
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: arm_rgbd_camera/depth/image_raw
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48

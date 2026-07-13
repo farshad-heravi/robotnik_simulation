@@ -166,6 +166,14 @@ def launch_setup(context, params):
                 (f"/{robot_id}/{camera_name}_camera_color/color/camera_info", f"/{robot_id}/{camera_name}_rgbd_camera/color/camera_info", "sensor_msgs/msg/CameraInfo", "gz.msgs.CameraInfo", "GZ_TO_ROS"),
                 (f"/{robot_id}/{camera_name}_camera_color/color/image_raw", f"/{robot_id}/{camera_name}_rgbd_camera/color/image_raw", "sensor_msgs/msg/Image", "gz.msgs.Image", "GZ_TO_ROS"),
             ])
+
+        def add_stereo_camera(camera_name):
+            bridge_raw.extend([
+                (f"/{robot_id}/{camera_name}_camera_left_sensor/color/camera_info", f"/{robot_id}/{camera_name}_rgbd_camera/left/camera_info", "sensor_msgs/msg/CameraInfo", "gz.msgs.CameraInfo", "GZ_TO_ROS"),
+                (f"/{robot_id}/{camera_name}_camera_left_sensor/color/image_raw", f"/{robot_id}/{camera_name}_rgbd_camera/left/image_raw", "sensor_msgs/msg/Image", "gz.msgs.Image", "GZ_TO_ROS"),
+                (f"/{robot_id}/{camera_name}_camera_right_sensor/color/camera_info", f"/{robot_id}/{camera_name}_rgbd_camera/right/camera_info", "sensor_msgs/msg/CameraInfo", "gz.msgs.CameraInfo", "GZ_TO_ROS"),
+                (f"/{robot_id}/{camera_name}_camera_right_sensor/color/image_raw", f"/{robot_id}/{camera_name}_rgbd_camera/right/image_raw", "sensor_msgs/msg/Image", "gz.msgs.Image", "GZ_TO_ROS"),
+            ])
         def add_laser(laser_name):
             bridge_raw.extend([
                 (f"/{robot_id}/{laser_name}_laser/scan", f"/{robot_id}/{laser_name}_laser/scan", "sensor_msgs/msg/LaserScan", "gz.msgs.LaserScan", "GZ_TO_ROS"),
@@ -184,7 +192,8 @@ def launch_setup(context, params):
         add_camera("front")
         add_camera("rear")
         add_camera("top_ptz")
-        add_camera("arm")
+        add_stereo_camera("arm")
+        add_depth_camera("arm")
         #add_depth_camera("front")
         add_laser("front")
         add_laser("rear")
