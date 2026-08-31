@@ -51,7 +51,6 @@ from launch.substitution import Substitution
 from launch import LaunchContext
 from launch.conditions import IfCondition
 
-
 # TODO: move this utility class into robotnik_common
 class ConfigFile(Substitution):
     """Substitution to get the path of the configuration file."""
@@ -135,6 +134,7 @@ def launch_setup(context, params):
             'low_performance_simulation': params['low_performance_simulation'],
             'end_effector': params['end_effector'],
             'use_tool_changer': 'true',
+            'wrist_camera': params['wrist_camera'],
         }.items(),
     ))
 
@@ -189,12 +189,19 @@ def launch_setup(context, params):
                 (f"/{robot_id}/{camera_name}_camera_depth/depth/image_raw", f"/{robot_id}/{camera_name}_rgbd_camera/depth/image_raw", "sensor_msgs/msg/Image", "gz.msgs.Image", "GZ_TO_ROS"),
             ])
 
+        wrist_camera = substitute_param_context(params['wrist_camera'], context)
+
+        if wrist_camera == "realsense_d435i":
+            add_camera("arm")
+            add_depth_camera("arm")
+        else:
+            add_stereo_camera("arm")
+            add_depth_camera("arm")
+
         add_camera("front")
         add_camera("rear")
         add_camera("top_ptz")
-        add_stereo_camera("arm")
-        add_depth_camera("arm")
-        #add_depth_camera("front")
+        add_depth_camera("front")
         add_laser("front")
         add_laser("rear")
         add_pointcloud("top")
@@ -337,6 +344,7 @@ def generate_launch_description():
         ("use_sim_time", "Use simulation time", "True", "USE_SIM_TIME"),
         ("low_performance_simulation", "Enable Low Performance Simulation", "False", "LOW_PERFORMANCE_SIMULATION"),
         ("end_effector", "End effector to use", "rg6", "END_EFFECTOR"),
+        ("wrist_camera", "Camera type to use on the wrist stereolabs_zed2i or realsense_d435i", "stereolabs_zed2i", "WRIST_CAMERA"),
     ]
 
     ld = LaunchDescription()
