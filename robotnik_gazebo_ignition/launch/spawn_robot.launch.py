@@ -169,7 +169,6 @@ def launch_setup(context, params):
 
         def add_stereo_camera(camera_name):
             bridge_raw.extend([
-                # Usar la cámara izquierda de la ZED como imagen RGB principal.
                 (
                     f"/{robot_id}/{camera_name}_camera_left_sensor/color/camera_info",
                     f"/{robot_id}/{camera_name}_rgbd_camera/color/camera_info",
@@ -184,8 +183,6 @@ def launch_setup(context, params):
                     "gz.msgs.Image",
                     "GZ_TO_ROS",
                 ),
-
-                # Mantener disponible la cámara derecha de la ZED.
                 (
                     f"/{robot_id}/{camera_name}_camera_right_sensor/color/camera_info",
                     f"/{robot_id}/{camera_name}_rgbd_camera/right/camera_info",
@@ -309,6 +306,15 @@ def launch_setup(context, params):
     controllers.append(
          robot_controller_config, # type: ignore
     )
+    # Gazebo can take longer than the spawner defaults to process the first
+    # controller switch while rendering starts.  If its service reply arrives
+    # late, the spawner retries joint_state_broadcaster, which is already
+    # active, and the STRICT switch aborts before the remaining controllers
+    # (base and arm) are started.
+    controllers.extend([
+        '--switch-timeout', '30.0',
+        '--service-call-timeout', '30.0',
+    ])
 
     ret.append(Node(
         package='controller_manager',
