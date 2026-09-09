@@ -225,7 +225,16 @@ def launch_setup(context, params):
         add_camera("front")
         add_camera("rear")
         add_camera("top_ptz")
+<<<<<<< Updated upstream
         add_depth_camera("front")
+=======
+        add_stereo_camera("arm")
+        add_depth_camera("arm")
+        bridge_raw.extend([
+            (f"/{robot_id}/arm_camera_depth/depth/image_raw/points", f"/{robot_id}/arm_rgbd_camera/depth/points", "sensor_msgs/msg/PointCloud2", "gz.msgs.PointCloudPacked", "GZ_TO_ROS"),
+        ])
+        #add_depth_camera("front")
+>>>>>>> Stashed changes
         add_laser("front")
         add_laser("rear")
         add_pointcloud("top")
