@@ -225,15 +225,21 @@ def launch_setup(context, params):
                 (f"/{robot_id}/arm_camera/imu", f"/{robot_id}/arm_rgbd_camera/imu", "sensor_msgs/msg/Imu", "gz.msgs.IMU", "GZ_TO_ROS"),
             ])
 
+        def add_wrist_zed_auxiliary_streams():
+            bridge_raw.append(
+                (f"/{robot_id}/arm_camera/data", f"/{robot_id}/arm_rgbd_camera/imu", "sensor_msgs/msg/Imu", "gz.msgs.IMU", "GZ_TO_ROS")
+            )
+
         wrist_camera = substitute_param_context(params['wrist_camera'], context)
 
         if wrist_camera == "realsense_d435i":
             add_camera("arm")
             add_depth_camera("arm")
             add_wrist_realsense_auxiliary_streams()
-        else:
+        elif wrist_camera == "stereolabs_zed2i":
             add_stereo_camera("arm")
             add_depth_camera("arm")
+            add_wrist_zed_auxiliary_streams()
 
         add_camera("front")
         add_camera("rear")
