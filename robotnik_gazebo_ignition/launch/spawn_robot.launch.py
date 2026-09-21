@@ -135,9 +135,6 @@ def launch_setup(context, params):
             'end_effector': params['end_effector'],
             'use_tool_changer': 'true',
             'wrist_camera': params['wrist_camera'],
-            'camera_depth_width': params['camera_depth_width'],
-            'camera_depth_height': params['camera_depth_height'],
-            'camera_depth_rate': params['camera_depth_rate'],
         }.items(),
     ))
 
@@ -222,12 +219,17 @@ def launch_setup(context, params):
                 (f"/{robot_id}/arm_camera_irred1/ired/camera_info", f"/{robot_id}/arm_rgbd_camera/infra1/camera_info", "sensor_msgs/msg/CameraInfo", "gz.msgs.CameraInfo", "GZ_TO_ROS"),
                 (f"/{robot_id}/arm_camera_irred2/ired/image_raw", f"/{robot_id}/arm_rgbd_camera/infra2/image_raw", "sensor_msgs/msg/Image", "gz.msgs.Image", "GZ_TO_ROS"),
                 (f"/{robot_id}/arm_camera_irred2/ired/camera_info", f"/{robot_id}/arm_rgbd_camera/infra2/camera_info", "sensor_msgs/msg/CameraInfo", "gz.msgs.CameraInfo", "GZ_TO_ROS"),
-                (f"/{robot_id}/arm_camera/imu", f"/{robot_id}/arm_rgbd_camera/imu", "sensor_msgs/msg/Imu", "gz.msgs.IMU", "GZ_TO_ROS"),
+                (f"/{robot_id}/arm_camera/data", f"/{robot_id}/arm_rgbd_camera/imu", "sensor_msgs/msg/Imu", "gz.msgs.IMU", "GZ_TO_ROS"),
             ])
 
         def add_wrist_zed_auxiliary_streams():
             bridge_raw.append(
                 (f"/{robot_id}/arm_camera/data", f"/{robot_id}/arm_rgbd_camera/imu", "sensor_msgs/msg/Imu", "gz.msgs.IMU", "GZ_TO_ROS")
+            )
+
+        def add_wrist_depth_pointcloud():
+            bridge_raw.append(
+                (f"/{robot_id}/arm_camera_depth/depth/image_raw/points", f"/{robot_id}/arm_rgbd_camera/depth/points", "sensor_msgs/msg/PointCloud2", "gz.msgs.PointCloudPacked", "GZ_TO_ROS")
             )
 
         wrist_camera = substitute_param_context(params['wrist_camera'], context)
@@ -236,24 +238,17 @@ def launch_setup(context, params):
             add_camera("arm")
             add_depth_camera("arm")
             add_wrist_realsense_auxiliary_streams()
+            add_wrist_depth_pointcloud()
         elif wrist_camera == "stereolabs_zed2i":
             add_stereo_camera("arm")
             add_depth_camera("arm")
             add_wrist_zed_auxiliary_streams()
+            add_wrist_depth_pointcloud()
 
         add_camera("front")
         add_camera("rear")
         add_camera("top_ptz")
-<<<<<<< Updated upstream
         add_depth_camera("front")
-=======
-        add_stereo_camera("arm")
-        add_depth_camera("arm")
-        bridge_raw.extend([
-            (f"/{robot_id}/arm_camera_depth/depth/image_raw/points", f"/{robot_id}/arm_rgbd_camera/depth/points", "sensor_msgs/msg/PointCloud2", "gz.msgs.PointCloudPacked", "GZ_TO_ROS"),
-        ])
-        #add_depth_camera("front")
->>>>>>> Stashed changes
         add_laser("front")
         add_laser("rear")
         add_pointcloud("top")
@@ -406,9 +401,6 @@ def generate_launch_description():
         ("low_performance_simulation", "Enable Low Performance Simulation", "False", "LOW_PERFORMANCE_SIMULATION"),
         ("end_effector", "End effector to use", "rg6", "END_EFFECTOR"),
         ("wrist_camera", "Camera type to use on the wrist stereolabs_zed2i or realsense_d435i", "stereolabs_zed2i", "WRIST_CAMERA"),
-        ("camera_depth_width", "Simulated wrist depth width", "1280", "CAMERA_DEPTH_WIDTH"),
-        ("camera_depth_height", "Simulated wrist depth height", "720", "CAMERA_DEPTH_HEIGHT"),
-        ("camera_depth_rate", "Simulated wrist depth rate", "30", "CAMERA_DEPTH_RATE"),
     ]
 
     ld = LaunchDescription()
