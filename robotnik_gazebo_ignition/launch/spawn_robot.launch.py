@@ -150,6 +150,7 @@ def launch_setup(context, params):
             '-x', params['x'],
             '-y', params['y'],
             '-z', params['z'],
+            '-Y', params['yaw'],
         ],
         output='screen',
     ))
@@ -380,7 +381,10 @@ def launch_setup(context, params):
             '-t', [params['robot_id'], ' - ', params['robot_model'], ' - RViz'],
         ],
         parameters=[{'use_sim_time': True}],
-        condition=IfCondition(params['run_rviz'])
+        condition=IfCondition(params['run_rviz']),
+        # RViz can segfault intermittently at startup: restart it.
+        respawn=True,
+        respawn_delay=3.0,
     ))
     return ret
 
@@ -394,6 +398,7 @@ def generate_launch_description():
         ("x", "Initial X Coordinate", "0.0", "X"),
         ("y", "Initial Y Coordinate", "0.0", "Y"),
         ("z", "Initial Z Coordinate", "0.0", "Z"),
+        ("yaw", "Initial Yaw (rad)", "0.0", "SPAWN_YAW"),
         ("has_arm", "Enable Arm Controller", "False", "HAS_ARM"),
         ("run_rviz", "Run RViz", "True", "RUN_RVIZ"),
         ("rviz_config", "RViz configuration file", "", "CONFIG_RVIZ"),
