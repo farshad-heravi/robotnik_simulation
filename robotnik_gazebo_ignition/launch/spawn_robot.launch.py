@@ -135,6 +135,7 @@ def launch_setup(context, params):
             'end_effector': params['end_effector'],
             'use_tool_changer': 'true',
             'wrist_camera': params['wrist_camera'],
+            'ur_type': params['ur_type'],
         }.items(),
     ))
 
@@ -406,6 +407,7 @@ def generate_launch_description():
         ("low_performance_simulation", "Enable Low Performance Simulation", "False", "LOW_PERFORMANCE_SIMULATION"),
         ("end_effector", "End effector to use", "rg6", "END_EFFECTOR"),
         ("wrist_camera", "Camera type to use on the wrist stereolabs_zed2i or realsense_d435i", "stereolabs_zed2i", "WRIST_CAMERA"),
+        ("ur_type", "Universal Robots arm model (ur5e, ur15, ...)", "ur5e", "UR_TYPE"),
     ]
 
     ld = LaunchDescription()
